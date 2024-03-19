@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/Cinema
+    username: postgres
+    password: Abdou
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+
+application:
+  security:
+    jwt:
+      secret-key: e2ac1bf45858222809ce87df0683d566a6ba84eccbe0f44768c423559b76bcd6
+      expiration: 86400000 # a day
+      refresh-token:
+        expiration: 604800000 # 7 days
+
