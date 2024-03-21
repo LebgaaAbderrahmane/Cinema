@@ -1,13 +1,13 @@
 package com.Cybirgos.Cinema.film;
 
 import com.Cybirgos.Cinema.diffusion.Diffusion;
+import com.Cybirgos.Cinema.images.Image;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
 import java.util.List;
 
 
@@ -21,12 +21,14 @@ public class Film {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    private Time duration;
+    private double duration;
     @Enumerated(EnumType.STRING)
     private Version version;
     private int rate;
     private List<String> category;
     @OneToMany(mappedBy = "film")
     private List<Diffusion> diffusions;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Image poster;
 
 }
