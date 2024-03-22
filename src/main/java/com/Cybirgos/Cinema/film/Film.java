@@ -22,13 +22,15 @@ public class Film {
     private Integer id;
     private String name;
     private double duration;
-    @Enumerated(EnumType.STRING)
-    private Version version;
-    private int rate;
+    private String version;
+    private double rate;
     private List<String> category;
+    @Column(columnDefinition = "text")
+    private String description;
     @OneToMany(mappedBy = "film")
     private List<Diffusion> diffusions;
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image poster;
 
 }

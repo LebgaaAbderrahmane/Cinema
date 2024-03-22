@@ -1,7 +1,10 @@
 package com.Cybirgos.Cinema.film;
 
+import com.Cybirgos.Cinema.images.Image;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,7 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+import static org.springframework.http.MediaType.*;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @RequestMapping("/api/v1/film")
@@ -22,8 +26,15 @@ public class FilmController {
     public ResponseEntity<List<Film>> getAllFilms ()  {
         return filmService.getAllFilms();
     }
-    @PostMapping(path = "/addFilm", consumes = {MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> addFilm(@RequestBody Film film, @RequestParam("image") MultipartFile file) throws IOException {
+    @GetMapping("/getFilmPoster/{id}")
+    public ResponseEntity<?> getFilmPoster (@PathVariable Long id){
+        byte[] imageData=filmService.getImage(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf("image/png"))
+                .body(imageData);
+    }
+    @RequestMapping(path = "/addFilm", method = POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE ,APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> addFilm(@RequestPart("filmData") Film film , @RequestPart("image") MultipartFile file) throws IOException {
         return filmService.addFilm(film,file);
     }
     @PutMapping("/updateFilm/{id}")
