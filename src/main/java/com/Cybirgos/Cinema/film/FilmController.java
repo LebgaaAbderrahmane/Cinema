@@ -26,6 +26,14 @@ public class FilmController {
     public ResponseEntity<List<Film>> getAllFilms ()  {
         return filmService.getAllFilms();
     }
+    // TODO getFilmById
+    @GetMapping("/getAllPosters") // TOdo
+    public ResponseEntity<?> getAllPosters (){
+        List<byte[]> imageData=filmService.getAllImages();
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf("image/png"))
+                .body(imageData);
+    }
     @GetMapping("/getFilmPoster/{id}")
     public ResponseEntity<?> getFilmPoster (@PathVariable Long id){
         byte[] imageData=filmService.getImage(id);

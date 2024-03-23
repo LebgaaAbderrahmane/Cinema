@@ -57,4 +57,13 @@ public class FilmService {
         filmRepo.delete(filmToDelete);
         return new ResponseEntity<>("Deleted",HttpStatus.OK);
     }
+
+    public List<byte[]> getAllImages() {
+        List<Image> dbImageData = imageRepo.findAll();
+        List<byte[]> posters = null;
+        for(Image i : dbImageData){
+            posters.add(ImageUtils.decompressImage(i.getImageData()));
+        }
+        return posters;
+    }
 }
