@@ -2,6 +2,7 @@ package com.Cybirgos.Cinema.film;
 
 import com.Cybirgos.Cinema.diffusion.Diffusion;
 import com.Cybirgos.Cinema.images.Image;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,11 +25,12 @@ public class Film {
     private double duration;
     private String version;
     private double rate;
-    private List<String> category;
+    private String category;
     @Column(columnDefinition = "text")
     private String description;
     @OneToMany(mappedBy = "film")
     private List<Diffusion> diffusions;
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image poster;

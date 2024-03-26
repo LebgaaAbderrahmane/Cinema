@@ -19,7 +19,7 @@ public class ProfileController {
     @Autowired
     ProfileService profileService;
 
-    @GetMapping("userDetails") //add score to profile
+    @GetMapping("userDetails")
     public ResponseEntity<Profile> getUserDetails(HttpServletRequest request){
         return profileService.getUserDetails(request);
     }

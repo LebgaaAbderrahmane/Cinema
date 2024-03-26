@@ -20,6 +20,7 @@ public class Room {
     private Integer id;
     private int number;
     private int capacity;
+    private int nbVipSeats;
     @OneToMany(mappedBy = "room")
     private List<Diffusion> diffusions;
 }

@@ -47,10 +47,17 @@ public class FilmService {
         return new ResponseEntity<>("Added",HttpStatus.OK);
     }
 
-    public ResponseEntity<String> updateFilm(Integer id) {
-        //TODO add update logic
+    public ResponseEntity<String> updateFilm(Integer id, Film film) {
+        Film updatedFilm = filmRepo.findById(id).get();
+        updatedFilm.setName(film.getName());
+        updatedFilm.setCategory(film.getCategory());
+        updatedFilm.setDescription(film.getDescription());
+        updatedFilm.setRate(film.getRate());
+        updatedFilm.setVersion(film.getVersion());
+        //filmRepo.save(updatedFilm);
         return new ResponseEntity<>("Updated",HttpStatus.OK);
     }
+
 
     public ResponseEntity<String> deleteFilm(Integer id) {
         var filmToDelete = filmRepo.findById(id).orElseThrow();
@@ -65,5 +72,41 @@ public class FilmService {
             posters.add(ImageUtils.decompressImage(i.getImageData()));
         }
         return posters;
+    }
+
+    public ResponseEntity<?> getFilmById(Integer id) {
+        try {
+            return new ResponseEntity<>(filmRepo.findById(id).orElseThrow(), HttpStatus.OK);
+        }catch (Exception ignored){}
+        return new ResponseEntity<>("No value present",HttpStatus.NOT_FOUND);
+    }
+
+    public ResponseEntity<List<Film>> getFilmByCategory(String category) {
+        try {
+            return new ResponseEntity<>(filmRepo.findByCategory(category),HttpStatus.OK);
+        }catch (Exception ignored){}
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND) ;
+    }
+
+    public ResponseEntity<List<Film>> getFilmByVersion(String version) {
+        return new ResponseEntity<>(filmRepo.findByVersion(version),HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<Film>> getFilmByName(String name) {
+        try {
+            var films = filmRepo.findByName(name);
+            return new ResponseEntity<>(films, HttpStatus.OK);
+        }catch (Exception ignored){}
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<String> updateFilmPoster(Integer id, MultipartFile file) throws IOException {
+        Image savedImage = imageRepo.save(Image.builder()
+                .name(file.getOriginalFilename())
+                .type(file.getContentType())
+                .imageData(ImageUtils.compressImage(file.getBytes())).build());
+        var film = filmRepo.findById(id).get();
+        film.setPoster(savedImage);
+        return new ResponseEntity<>("updated",HttpStatus.OK);
     }
 }

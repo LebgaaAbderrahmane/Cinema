@@ -20,6 +20,6 @@ public class Image {
     private Long id;
     private String name;
     private String type;
-    @Lob
+    @Column(name = "image_data", columnDefinition = "bytea")
     private byte[] imageData;
 }

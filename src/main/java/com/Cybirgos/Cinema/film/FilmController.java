@@ -26,8 +26,24 @@ public class FilmController {
     public ResponseEntity<List<Film>> getAllFilms ()  {
         return filmService.getAllFilms();
     }
-    // TODO getFilmById
-    @GetMapping("/getAllPosters") // TOdo
+    @GetMapping("getFilmByCategory")
+    public ResponseEntity<List<Film>> getFilmByCategory (@RequestParam String category){
+        return filmService.getFilmByCategory(category);
+    }
+    @GetMapping("getFilmByVersion")
+    public ResponseEntity<List<Film>> getFilmByVersion (@RequestParam String version){
+        return filmService.getFilmByVersion(version);
+    }
+    @GetMapping("getFilmByName/{name}")
+    public ResponseEntity<List<Film>> getFilmByName (@PathVariable String name){
+        return filmService.getFilmByName(name);
+    }
+
+    @GetMapping("getFilmById/{id}")
+    public ResponseEntity<?> getFilmById(@PathVariable Integer id){
+        return filmService.getFilmById(id);
+    }
+    @GetMapping("/getAllPosters") // Not working
     public ResponseEntity<?> getAllPosters (){
         List<byte[]> imageData=filmService.getAllImages();
         return ResponseEntity.status(HttpStatus.OK)
@@ -41,13 +57,17 @@ public class FilmController {
                 .contentType(MediaType.valueOf("image/png"))
                 .body(imageData);
     }
+    @PutMapping("/updateFilmPoster/{id}")
+    public ResponseEntity<String> updateFilmPoster(@PathVariable Integer id,@RequestPart MultipartFile file) throws IOException {
+        return filmService.updateFilmPoster(id,file);
+    }
     @RequestMapping(path = "/addFilm", method = POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE ,APPLICATION_JSON_VALUE})
     public ResponseEntity<?> addFilm(@RequestPart("filmData") Film film , @RequestPart("image") MultipartFile file) throws IOException {
         return filmService.addFilm(film,file);
     }
     @PutMapping("/updateFilm/{id}")
-    public ResponseEntity<String> updateFilm (@PathVariable Integer id){
-        return filmService.updateFilm(id);
+    public ResponseEntity<String> updateFilm (@PathVariable Integer id,@RequestBody Film film){
+        return filmService.updateFilm(id,film);
     }
     @DeleteMapping("/deleteFilm/{id}")
     public ResponseEntity<String > deleteFilm (@PathVariable Integer id){

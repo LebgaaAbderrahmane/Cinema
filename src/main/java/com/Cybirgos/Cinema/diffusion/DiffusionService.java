@@ -22,13 +22,23 @@ public class DiffusionService {
                 .date(diffusion.getDate())
                 .film(diffusion.getFilm())
                 .room(diffusion.getRoom())
+                .price(diffusion.getPrice())
+                .vipPrice(diffusion.getVipPrice())
                 .build();
         diffusionRepo.save(savedDiffusion);
         return new ResponseEntity<>("Added",HttpStatus.OK);
     }
 
-    public ResponseEntity<String> updateDiffusion(Integer id) {
-        // TODO add update logic
+    public ResponseEntity<String> updateDiffusion(Integer id, Diffusion diffusion) {
+        var updatedDiffusion = diffusionRepo.findById(id).get();
+        updatedDiffusion.setDate(diffusion.getDate());
+        updatedDiffusion.setFilm(diffusion.getFilm());
+        updatedDiffusion.setRoom(diffusion.getRoom());
+        updatedDiffusion.setPrice(diffusion.getPrice());
+        updatedDiffusion.setSchedule(diffusion.getSchedule());
+        updatedDiffusion.setNbTicket(diffusion.getNbTicket());
+        updatedDiffusion.setVipPrice(diffusion.getVipPrice());
+        //diffusionRepo.save(updatedDiffusion);
         return new ResponseEntity<>("Updated",HttpStatus.OK);
     }
 

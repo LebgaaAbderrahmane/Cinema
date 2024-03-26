@@ -19,6 +19,7 @@ public class RoomService {
         var savedRoom = Room.builder()
                 .number(room.getNumber())
                 .capacity(room.getCapacity())
+                .nbVipSeats(room.getNbVipSeats())
                 .build();
         roomRepo.save(savedRoom);
         return new ResponseEntity<>("Added",HttpStatus.OK);

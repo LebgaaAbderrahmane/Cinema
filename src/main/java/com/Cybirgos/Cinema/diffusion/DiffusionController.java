@@ -26,8 +26,8 @@ public class DiffusionController {
         return diffusionService.addDiffusion(diffusion);
     }
     @PutMapping("/updateDiffusion/{id}")
-    public ResponseEntity<String> updateDiffusion (@PathVariable Integer id){
-        return diffusionService.updateDiffusion(id);
+    public ResponseEntity<String> updateDiffusion (@PathVariable Integer id,@RequestBody Diffusion diffusion){
+        return diffusionService.updateDiffusion(id, diffusion);
     }
     @DeleteMapping("/deleteDiffusion/{id}")
     public ResponseEntity<String > deleteDiffusion (@PathVariable Integer id){
