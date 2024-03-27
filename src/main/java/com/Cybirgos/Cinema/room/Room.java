@@ -1,6 +1,7 @@
 package com.Cybirgos.Cinema.room;
 
 import com.Cybirgos.Cinema.diffusion.Diffusion;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,9 +19,15 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private int number;
+    private int roomNumber;
     private int capacity;
-    private int nbVipSeats;
+    private boolean isOccupied;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "room")
     private List<Diffusion> diffusions;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "room")
+    private List<Seat> seats;
 }

@@ -30,21 +30,25 @@ public class TicketService {
 
     public ResponseEntity<String> bookTicket(BookingRequest bookingRequest, HttpServletRequest request) {
         // TODO check if there is still some seats available
-        var token = request.getHeader(HttpHeaders.AUTHORIZATION).substring(7);
-        var username = jwtService.extractUsername(token);
-        var user = userRepo.findByUsername(username).orElseThrow();
         Diffusion savedDiffusion = diffusionRepo.findById(bookingRequest.getDiffusionId()).orElseThrow();
-        var bookedSeat = seatRepo.findBySeatNb(bookingRequest.getSeatNumber());
-        var savedTicket = Ticket.builder()
-                .user(user)
-                .price(bookingRequest.getPrice())
-                .createdOn(LocalDateTime.now())
-                .seat(bookedSeat)
-                .diffusion(savedDiffusion)
-                .build();
-        ticketRepo.save(savedTicket);
-        // TODO decrement number of seats available
-        return new ResponseEntity<>("Ticket booked", HttpStatus.OK);
+        if (savedDiffusion.getNbTicketSold() < savedDiffusion.getRoom().getCapacity()){
+
+            var token = request.getHeader(HttpHeaders.AUTHORIZATION).substring(7);
+            var username = jwtService.extractUsername(token);
+            var user = userRepo.findByUsername(username).orElseThrow();
+            var bookedSeat = seatRepo.findBySeatNb(bookingRequest.getSeatNumber());
+            var savedTicket = Ticket.builder()
+                    .user(user)
+                    .price(bookingRequest.getPrice())
+                    .createdOn(LocalDateTime.now())
+                    .seat(bookedSeat)
+                    .diffusion(savedDiffusion)
+                    .build();
+            ticketRepo.save(savedTicket);
+            // TODO decrement number of seats available
+            return new ResponseEntity<>("Ticket booked", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("room full!",HttpStatus.NOT_ACCEPTABLE);
     }
 
     public ResponseEntity<List<Ticket>> getAllUserBookings(HttpServletRequest request) {
@@ -55,7 +59,7 @@ public class TicketService {
     }
 
     public ResponseEntity<List<Ticket>> getBookingsByDiffusion(Integer id) {
-        var diffusion = diffusionRepo.findById(id).get();
+        var diffusion = diffusionRepo.findById(id).orElseThrow();
         return new ResponseEntity<>(ticketRepo.findByDiffusion(diffusion),HttpStatus.OK);
     }
 

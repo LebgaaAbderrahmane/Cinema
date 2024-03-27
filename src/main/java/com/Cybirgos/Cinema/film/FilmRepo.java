@@ -14,6 +14,6 @@ public interface FilmRepo extends JpaRepository<Film,Integer> {
     List<Film> findByCategory (String category);
     @Query(value = "SELECT * FROM film f WHERE f.version =:version",nativeQuery = true)
     List<Film> findByVersion (String version);
-    @Query(value = "SELECT * FROM film f WHERE f.name LIKE %:name%",nativeQuery = true)
+    @Query(value = "SELECT * FROM film f WHERE f.name LIKE :name%",nativeQuery = true)
     List<Film> findByName (String name);
 }

@@ -9,7 +9,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 
 @Entity
 @AllArgsConstructor
@@ -20,16 +23,20 @@ public class Diffusion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Date date;
-    private int nbTicket;
+    private LocalDate date;
+    private LocalTime startTime;
+    private int nbTicketSold;
     private double price;
     private double vipPrice;
+
     @ManyToOne
     @JoinColumn(name = "film_id")
     private Film film;
+
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
+
     @ManyToOne
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;

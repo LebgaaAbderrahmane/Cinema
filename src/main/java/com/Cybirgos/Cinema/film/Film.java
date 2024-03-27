@@ -26,10 +26,14 @@ public class Film {
     private String version;
     private double rate;
     private String category;
+    private boolean isOnDiffusion;
+
     @Column(columnDefinition = "text")
     private String description;
+
     @OneToMany(mappedBy = "film")
     private List<Diffusion> diffusions;
+
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")

@@ -14,6 +14,14 @@ import java.util.List;
 public class RoomController {
     @Autowired
     RoomService roomService;
+    @GetMapping("/getAllSeats/{id}")
+    public ResponseEntity<List<Seat>> getAllSeats(@PathVariable Integer id){
+        return roomService.getAllSeats(id);
+    }
+    @GetMapping("/getRoomById/{id}")
+    public ResponseEntity<Room> getRoomById(@PathVariable Integer id){
+        return roomService.getRoomById(id);
+    }
     @GetMapping("/getAllRooms")
     public ResponseEntity<List<Room>> getAllRooms (){
         return roomService.getAllRooms();
@@ -23,11 +31,15 @@ public class RoomController {
         return roomService.addRoom(room);
     }
     @PutMapping("/updateRoom/{id}")
-    public ResponseEntity<String> updateRoom (@PathVariable Integer id){
-        return roomService.updateRoom(id);
+    public ResponseEntity<String> updateRoom (@PathVariable Integer id,@RequestBody Room room){
+        return roomService.updateRoom(id,room);
     }
     @DeleteMapping("/deleteRoom/{id}")
     public ResponseEntity<String > deleteRoom (@PathVariable Integer id){
         return roomService.deleteRoom(id);
+    }
+    @GetMapping("/isRoomNumberAvailable/{roomNumber}")
+    public ResponseEntity<String> isRoomNumberAvailable(@PathVariable Integer roomNumber){
+        return roomService.isRoomNumberAvailable(roomNumber);
     }
 }

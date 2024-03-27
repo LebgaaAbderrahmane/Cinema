@@ -1,6 +1,5 @@
 package com.Cybirgos.Cinema.film;
 
-import com.Cybirgos.Cinema.images.Image;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

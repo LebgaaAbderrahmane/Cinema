@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @AllArgsConstructor
@@ -29,7 +28,7 @@ public class Ticket {
     @JoinColumn(name = "seat_id", referencedColumnName = "id")
     private Seat seat;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "diffusion_id", referencedColumnName = "id")
     private Diffusion diffusion;
 

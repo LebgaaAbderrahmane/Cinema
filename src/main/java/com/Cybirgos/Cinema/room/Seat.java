@@ -16,10 +16,11 @@ public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private int seatNb;
+    private int seatNumber;
     private boolean isReserved;
     private boolean isVip;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "diffusion_id", referencedColumnName = "id")
-    private Diffusion diffusion;
+
+    @ManyToOne
+    @JoinColumn(name = "room_id", referencedColumnName = "id")
+    private Room room;
 }

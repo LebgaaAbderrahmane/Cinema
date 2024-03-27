@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +26,7 @@ public class FilmService {
     }
     public byte[] getImage(Long id){
         Optional<Image> dbImageData = imageRepo.findById(id);
-        return ImageUtils.decompressImage(dbImageData.get().getImageData());
+        return ImageUtils.decompressImage(dbImageData.orElseThrow().getImageData());
     }
 
     public ResponseEntity<?> addFilm(Film film, MultipartFile file) throws IOException {
@@ -39,6 +40,7 @@ public class FilmService {
                 .rate(film.getRate())
                 .category(film.getCategory())
                 .version(film.getVersion())
+                .isOnDiffusion(false)
                 .description(film.getDescription())
                 .poster(savedImage)
                 .build();
@@ -48,26 +50,33 @@ public class FilmService {
     }
 
     public ResponseEntity<String> updateFilm(Integer id, Film film) {
-        Film updatedFilm = filmRepo.findById(id).get();
-        updatedFilm.setName(film.getName());
-        updatedFilm.setCategory(film.getCategory());
-        updatedFilm.setDescription(film.getDescription());
-        updatedFilm.setRate(film.getRate());
-        updatedFilm.setVersion(film.getVersion());
-        //filmRepo.save(updatedFilm);
-        return new ResponseEntity<>("Updated",HttpStatus.OK);
+        Film updatedFilm = filmRepo.findById(id).orElseThrow();
+        if(!updatedFilm.isOnDiffusion()) {
+            updatedFilm.setName(film.getName());
+            updatedFilm.setCategory(film.getCategory());
+            updatedFilm.setDescription(film.getDescription());
+            updatedFilm.setRate(film.getRate());
+            updatedFilm.setVersion(film.getVersion());
+            filmRepo.save(updatedFilm);
+            return new ResponseEntity<>("Updated", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Film on a diffusion Can't be updated",HttpStatus.BAD_REQUEST);
     }
 
 
     public ResponseEntity<String> deleteFilm(Integer id) {
         var filmToDelete = filmRepo.findById(id).orElseThrow();
-        filmRepo.delete(filmToDelete);
-        return new ResponseEntity<>("Deleted",HttpStatus.OK);
+        if(!filmToDelete.isOnDiffusion()) {
+            filmRepo.delete(filmToDelete);
+            return new ResponseEntity<>("Deleted", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Film on a diffusion Can't be deleted",HttpStatus.BAD_REQUEST);
     }
 
+    // TODO this method should be removed
     public List<byte[]> getAllImages() {
         List<Image> dbImageData = imageRepo.findAll();
-        List<byte[]> posters = null;
+        List<byte[]> posters = new ArrayList<>();
         for(Image i : dbImageData){
             posters.add(ImageUtils.decompressImage(i.getImageData()));
         }
@@ -105,7 +114,7 @@ public class FilmService {
                 .name(file.getOriginalFilename())
                 .type(file.getContentType())
                 .imageData(ImageUtils.compressImage(file.getBytes())).build());
-        var film = filmRepo.findById(id).get();
+        var film = filmRepo.findById(id).orElseThrow();
         film.setPoster(savedImage);
         return new ResponseEntity<>("updated",HttpStatus.OK);
     }

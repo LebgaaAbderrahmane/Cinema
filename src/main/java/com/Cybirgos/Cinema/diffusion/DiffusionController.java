@@ -1,7 +1,5 @@
 package com.Cybirgos.Cinema.diffusion;
 
-import com.Cybirgos.Cinema.film.Film;
-import com.Cybirgos.Cinema.film.FilmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("/api/v1/ticket")
 @CrossOrigin
 @RequiredArgsConstructor
-public class TicketController {
+public class TicketController {  // TODO test all endpoints
     @Autowired
     TicketService ticketService;
     @PostMapping("/bookTicket")

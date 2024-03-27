@@ -23,15 +23,15 @@ public class ProfileController {
     public ResponseEntity<Profile> getUserDetails(HttpServletRequest request){
         return profileService.getUserDetails(request);
     }
-    @PostMapping(value = "/changeProfilePicture",consumes = { MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> changeProfilePicture (@RequestPart MultipartFile file,HttpServletRequest request) throws IOException {
-        return profileService.changeProfilePicture(file,request);
-    }
-    @GetMapping("getProfilePicture/{id}")
-    public ResponseEntity<?> getProfilePicture (@PathVariable Long id){
-        byte[] imageData=profileService.getImage(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.valueOf("image/png"))
-                .body(imageData);
-    }
+//    @PostMapping(value = "/changeProfilePicture",consumes = { MediaType.MULTIPART_FORM_DATA_VALUE})
+//    public ResponseEntity<?> changeProfilePicture (@RequestPart MultipartFile file,HttpServletRequest request) throws IOException {
+//        return profileService.changeProfilePicture(file,request);
+//    }
+//    @GetMapping("getProfilePicture/{id}")
+//    public ResponseEntity<?> getProfilePicture (@PathVariable Long id){
+//        byte[] imageData=profileService.getImage(id);
+//        return ResponseEntity.status(HttpStatus.OK)
+//                .contentType(MediaType.valueOf("image/png"))
+//                .body(imageData);
+//    }
 }

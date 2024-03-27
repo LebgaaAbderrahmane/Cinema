@@ -20,6 +20,6 @@ public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private LocalTime start;
-    private LocalTime finish;
+    private LocalTime startTime;
+    private LocalTime endTime;
 }
