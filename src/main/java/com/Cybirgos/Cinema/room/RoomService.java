@@ -14,6 +14,7 @@ public class RoomService {
     RoomRepo roomRepo;
     @Autowired
     SeatRepo seatRepo;
+    //gui
     public ResponseEntity<List<Room>> getAllRooms() {
         return new ResponseEntity<>(roomRepo.findAll(), HttpStatus.OK);
     }
