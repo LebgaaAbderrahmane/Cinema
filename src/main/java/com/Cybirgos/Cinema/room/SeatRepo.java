@@ -8,14 +8,14 @@ import java.util.List;
 
 @Repository
 public interface SeatRepo extends JpaRepository<Seat,Integer> {
-    Seat findBySeatNb (Integer seatNb);
+    Seat findBySeatNumber (Integer seatNb);
     //List<Seat> getAvailableSeats (Integer id);
     @Query(value = "SELECT * FROM seat s WHERE s.seat_number =:seatNb and s.room_id =:roomId",nativeQuery = true)
-    Seat findBySeatNbAndRoomId(Integer seatNb,Integer roomId);
+    Seat findBySeatNumberAndRoomId(Integer seatNb, Integer roomId);
 
-    @Query(value = "DELETE * FROM seat s WHERE s.room_id =:roomId",nativeQuery = true)
+    @Query(value = "DELETE * FROM seat s WHERE s.room_id =:id",nativeQuery = true)
     void deleteByRoomId(Integer id);
 
-    @Query(value = "SELECT * FROM seat s WHERE s.room_id =:roomId",nativeQuery = true)
+    @Query(value = "SELECT * FROM seat s WHERE s.room_id =:id",nativeQuery = true)
     List<Seat> findByRoomId(Integer id);
 }

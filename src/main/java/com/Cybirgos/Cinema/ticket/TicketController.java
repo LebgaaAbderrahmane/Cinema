@@ -12,13 +12,14 @@ import java.util.List;
 @RequestMapping("/api/v1/ticket")
 @CrossOrigin
 @RequiredArgsConstructor
-public class TicketController {  // TODO test all endpoints
+public class TicketController {
     @Autowired
     TicketService ticketService;
     @PostMapping("/bookTicket")
     public ResponseEntity<String> bookTicket (@RequestBody BookingRequest bookingRequest, HttpServletRequest request){
         return ticketService.bookTicket(bookingRequest,request);
     }
+
     @GetMapping("/getAllUserBookings")
     public ResponseEntity<List<Ticket>> getAllUserBookings (HttpServletRequest request){
        return ticketService.getAllUserBookings(request);

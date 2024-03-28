@@ -28,24 +28,31 @@ public class TicketService {
     @Autowired
     SeatRepo seatRepo;
 
+
+
     public ResponseEntity<String> bookTicket(BookingRequest bookingRequest, HttpServletRequest request) {
-        // TODO check if there is still some seats available
         Diffusion savedDiffusion = diffusionRepo.findById(bookingRequest.getDiffusionId()).orElseThrow();
         if (savedDiffusion.getNbTicketSold() < savedDiffusion.getRoom().getCapacity()){
 
             var token = request.getHeader(HttpHeaders.AUTHORIZATION).substring(7);
             var username = jwtService.extractUsername(token);
             var user = userRepo.findByUsername(username).orElseThrow();
-            var bookedSeat = seatRepo.findBySeatNb(bookingRequest.getSeatNumber());
+            var bookedSeat = seatRepo.findBySeatNumber(bookingRequest.getSeatNumber());
+            bookedSeat.setReserved(true);
+            double price = savedDiffusion.getPrice();
+            if(bookedSeat.isVip()){
+                price = savedDiffusion.getVipPrice();
+            }
             var savedTicket = Ticket.builder()
                     .user(user)
-                    .price(bookingRequest.getPrice())
+                    .price(price)
                     .createdOn(LocalDateTime.now())
                     .seat(bookedSeat)
                     .diffusion(savedDiffusion)
                     .build();
             ticketRepo.save(savedTicket);
-            // TODO decrement number of seats available
+            savedDiffusion.setNbTicketSold(savedDiffusion.getNbTicketSold()+1);
+
             return new ResponseEntity<>("Ticket booked", HttpStatus.OK);
         }
         return new ResponseEntity<>("room full!",HttpStatus.NOT_ACCEPTABLE);
@@ -54,18 +61,34 @@ public class TicketService {
     public ResponseEntity<List<Ticket>> getAllUserBookings(HttpServletRequest request) {
         var token = request.getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         var username = jwtService.extractUsername(token);
-        var user = userRepo.findByUsername(username).orElseThrow();
-        return new ResponseEntity<>(ticketRepo.findByUser(user),HttpStatus.OK) ;
+        if (userRepo.findByUsername(username).isPresent()) {
+            var user = userRepo.findByUsername(username).get();
+            if(ticketRepo.findByUser(user).isPresent()){
+                return new ResponseEntity<>(ticketRepo.findByUser(user).get(),HttpStatus.OK) ;
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<List<Ticket>> getBookingsByDiffusion(Integer id) {
-        var diffusion = diffusionRepo.findById(id).orElseThrow();
-        return new ResponseEntity<>(ticketRepo.findByDiffusion(diffusion),HttpStatus.OK);
+        Diffusion diffusion = null;
+        if (diffusionRepo.findById(id).isPresent()) {
+            diffusion = diffusionRepo.findById(id).get();
+        }
+        if(ticketRepo.findByDiffusion(diffusion).isPresent()){
+            return new ResponseEntity<>(ticketRepo.findByDiffusion(diffusion).get(),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
     }
 
     public ResponseEntity<String> cancelBooking(Integer id) {
-        // TODO increment number of seats available
-        ticketRepo.deleteById(id);
-        return new ResponseEntity<>("Canceled ",HttpStatus.OK);
+        Ticket booking = null;
+        if (ticketRepo.findById(id).isPresent()) {
+            booking = ticketRepo.findById(id).get();
+            booking.getDiffusion().setNbTicketSold(booking.getDiffusion().getNbTicketSold()-1);
+            return new ResponseEntity<>("Canceled ",HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

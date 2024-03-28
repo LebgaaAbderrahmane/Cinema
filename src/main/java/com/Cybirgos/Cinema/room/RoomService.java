@@ -56,7 +56,7 @@ public class RoomService {
                 }
             } else if (previousCapacity > room.getCapacity()) {
                 for (int i = previousCapacity + 1; i <= room.getCapacity(); i++) {
-                    var seat = seatRepo.findBySeatNbAndRoomId(i, id);
+                    var seat = seatRepo.findBySeatNumberAndRoomId(i, id);
                     seats.remove(seat);
                 }
             }

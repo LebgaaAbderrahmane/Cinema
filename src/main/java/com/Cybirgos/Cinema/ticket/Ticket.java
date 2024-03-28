@@ -20,7 +20,7 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private int number;
+    //private int number;
     private double price;
     private LocalDateTime createdOn;
 

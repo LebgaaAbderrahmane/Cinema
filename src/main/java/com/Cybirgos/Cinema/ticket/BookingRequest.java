@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class BookingRequest {
-    private double price;
+    //private double price;
     private int seatNumber;
     private int diffusionId;
 }

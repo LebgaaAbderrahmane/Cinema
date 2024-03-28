@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TicketRepo extends JpaRepository<Ticket,Integer> {
-    List<Ticket> findByUser (User user);
-    List<Ticket> findByDiffusion (Diffusion diffusion);
+
+    Optional<List<Ticket>>  findByUser (User user);
+    Optional<List<Ticket>>  findByDiffusion (Diffusion diffusion);
 }
